@@ -10,8 +10,7 @@ if "release" in sys.argv[-1]:
     os.system("rm -rf dist/tess-atl*")
     sys.exit()
 
-with open("requirements.txt") as f:
-    install_requires = f.read().splitlines()
+INSTALL_REQUIRES = ["numpy", "pandas", "astroquery", "astropy", "scipy"]
 
 # Load the __version__ variable without importing the package already
 exec(open("atl/version.py").read())
@@ -28,7 +27,7 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
     ],
-    install_requires=install_requires,
+    install_requires=INSTALL_REQUIRES,
     entry_points={
         "console_scripts": [
             "atl=atl.cli:main",
