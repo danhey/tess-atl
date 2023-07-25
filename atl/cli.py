@@ -38,7 +38,6 @@ def main():
         help="The observational cadence, either 20 or 120. Default is 20.",
     )
 
-    # magnitude, teff, radius, logg, sectors, cadence,
     args = parser.parse_args()
 
     # Query the TIC first for magnitudes, positions.
