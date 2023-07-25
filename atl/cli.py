@@ -33,7 +33,7 @@ def main():
     parser.add_argument(
         "--cadence",
         type=int,
-        required=True,
+        required=False,
         default=20,
         help="The observational cadence, either 20 or 120. Default is 20.",
     )
