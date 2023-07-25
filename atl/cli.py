@@ -34,7 +34,8 @@ def main():
         "--cadence",
         type=int,
         required=True,
-        help="The observational cadence, either 20 or 120",
+        default=20,
+        help="The observational cadence, either 20 or 120. Default is 20.",
     )
 
     # magnitude, teff, radius, logg, sectors, cadence,

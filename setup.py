@@ -7,7 +7,7 @@ from setuptools import setup
 if "release" in sys.argv[-1]:
     os.system("python setup.py sdist")
     os.system("twine upload dist/*")
-    os.system("rm -rf dist/echelle*")
+    os.system("rm -rf dist/tess-atl*")
     sys.exit()
 
 with open("requirements.txt") as f:
