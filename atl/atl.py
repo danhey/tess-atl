@@ -11,10 +11,19 @@ from .noise import *
 
 
 def granulation(nu0, DILUTION, VNYQ):
-    # calculate the granulation at a set of frequencies from (7) eqn 2 model F
-    # Divide by DILUTION squared as it affects stars in the time series.
-    # The units of DILUTION change from ppm to ppm^2 microHz^-1 when going from the
-    # time series to frequency. p6: c=4 and zeta = 2*sqrt(2)/pi
+    """Calculate the granulation at a set of frequencies from (7) eqn 2 model F
+    Divide by DILUTION squared as it affects stars in the time series.
+    The units of DILUTION change from ppm to ppm^2 microHz^-1 when going from the
+    time series to frequency. p6: c=4 and zeta = 2*sqrt(2)/pi
+
+    Args:
+        nu0 (_type_): _description_
+        DILUTION (_type_): _description_
+        VNYQ (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
 
     a_nomass = 0.85 * 3382 * nu0**-0.609
     b1 = 0.317 * nu0**0.970
@@ -145,7 +154,7 @@ def calc_detection_probability(
     return pfinal, snr, numax, dnu  # , snrthresh # snr is needed in TESS_telecon2.py
 
 
-def get_sectors(vals):  #
+def get_sectors(vals):
     (
         outID,
         outEclipLong,
