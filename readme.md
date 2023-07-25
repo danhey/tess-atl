@@ -15,7 +15,6 @@ pip install tess-atl
 `tess-atl` will query the relevant catalogs to calculate probabilities. Input target stars from the command line can take the form of a TIC ID, a Gaia DR2 ID, or a target name.
 
 ```bash
-```bash
 atl --target 'alf Men' 
 ```
 
