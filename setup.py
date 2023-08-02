@@ -12,12 +12,10 @@ if "release" in sys.argv[-1]:
 
 INSTALL_REQUIRES = ["numpy", "pandas", "astroquery", "astropy", "scipy"]
 
-# Load the __version__ variable without importing the package already
-exec(open("atl/version.py").read())
 
 setup(
     name="tess-atl",
-    version=__version__,
+    version="0.0.2.2",
     author="Daniel Hey",
     packages=["atl"],
     long_description_content_type="text/markdown",
