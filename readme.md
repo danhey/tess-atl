@@ -23,6 +23,37 @@ By default, the sectors of targeted observation will be automatically calculated
 ```bash
 atl --target 'pi Men' --cadence 20
 ```
+will give the following
+```bash
+ID                                                                   261136679
+sectors                                                                     19
+KIC                                                                       <NA>
+GAIA                                                       4623036865373793408
+Tmag                                                                    5.1054
+ra                                                                   84.291188
+dec                                                                  -80.46912
+Teff                                                                    5992.1
+logg                                                                    4.3589
+rad                                                                    1.14889
+magnitude_difference                                                  0.020912
+dr3_source_id                                              4623036865373793408
+proper_motion_propagation                                                 True
+angular_distance                                                      0.122789
+dr2_source_id                                              4623036865373793408
+radius_gspphot                                                          1.2031
+teff_gspspec                                                            6014.0
+teff_gspphot                                                       5855.533203
+logg_gspphot                                                            4.2235
+logg_gspspec                                                              4.22
+radius_flame                                                          1.204053
+atl_teff                                                           5855.533203
+atl_logg                                                                4.2235
+atl_radius                                                              1.2031
+Probability: 1.000, numax: 1864.345 uHz, dnu: 104.904 uHz, SNR: 0.066
+```
+
+If the target ID is already known, this can be supplied by specifying either `--tic` `--kic` or `--gaia` (DR2 only). Cross-matches will be performed automatically.
+
 #### Python
 
 Functions can be exposed for more direct access, if desired.
