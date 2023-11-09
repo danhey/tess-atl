@@ -87,7 +87,7 @@ def main():
     r["coordinate"] = SkyCoord(r.ra * u.degree, r.dec * u.degree, unit="deg")
     # Now calculate the detection probability:
     row = r.iloc[0]
-    # print(repr(row))
+    print(repr(row))
     pfinal, snr, numax, dnu = calc_detection_probability(
         row.Tmag,
         row.atl_teff,
