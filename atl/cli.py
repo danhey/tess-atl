@@ -79,8 +79,10 @@ def main():
         sector_info = pd.DataFrame(get_sectors(vals).value_counts("ID")).reset_index()
         sector_info["ID"] = sector_info["ID"].astype(str)
         r = pd.merge(sector_info, r, on="ID")
+        # stupid sexy pandas
         r.rename(columns={0: "sectors"}, inplace=True)
         r.rename(columns={"0": "sectors"}, inplace=True)
+        r.rename(columns={"count": "sectors"}, inplace=True)
     else:
         r["sectors"] = args.sectors
 
