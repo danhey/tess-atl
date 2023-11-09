@@ -2,6 +2,8 @@ import argparse
 import pandas as pd
 import numpy as np
 from astroquery.simbad import Simbad
+from astropy.coordinates import SkyCoord
+import astropy.units as u
 
 from .query import query_tic, query_gaia
 from .atl import get_sectors
@@ -69,7 +71,7 @@ def main():
     r["atl_logg"] = (
         r["logg_gspphot"].combine_first(r["logg"]).combine_first(r["teff_gspspec"])
     )
-    r["atl_radius"] = r["radius_gspphot"].combine_first(r["radius"])
+    r["atl_radius"] = r["radius_gspphot"].combine_first(r["rad"])
 
     # OK, now where do these stars lie in TESS?
     if args.sectors is None:
@@ -77,25 +79,23 @@ def main():
         sector_info = pd.DataFrame(get_sectors(vals).value_counts("ID")).reset_index()
         sector_info["ID"] = sector_info["ID"].astype(str)
         r = pd.merge(sector_info, r, on="ID")
-        r.rename(columns={"count": "sectors"}, inplace=True)
+        r.rename(columns={0: "sectors"}, inplace=True)
     else:
         r["sectors"] = args.sectors
 
     # We need the position to calculate noise;
-    coord = pass
-
+    r["coordinate"] = SkyCoord(r.ra * u.degree, r.dec * u.degree, unit="deg")
     # Now calculate the detection probability:
     row = r.iloc[0]
-    print(repr(row))
+    # print(repr(row))
     pfinal, snr, numax, dnu = calc_detection_probability(
         row.Tmag,
-        row.dr3_teff,
-        row.dr3_radius,
-        row.dr3_logg,
+        row.atl_teff,
+        row.atl_radius,
+        row.atl_logg,
         row.sectors,
         args.cadence,
-        row.lum_flame,
-        row.mass_flame,
+        row.coordinate,
         fap=args.fap,
     )
     print(

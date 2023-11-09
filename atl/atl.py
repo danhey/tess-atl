@@ -84,8 +84,7 @@ def calc_detection_probability(
     VNYQ = (1.0 / (2.0 * cadence)) * 10**6  # in micro Hz
 
     numax = get_numax(logg, teff)
-    if np.isnan(luminosity):
-        luminosity = get_luminosity(radius, teff)
+    luminosity = get_luminosity(radius, teff)
     teffred = TEFFREF_SOLAR * (luminosity**-0.093)  # from (6) eqn 8. red-edge temp
 
     if np.isnan(numax) | np.isnan(sectors):
