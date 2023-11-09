@@ -1,0 +1,20 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "tess-atl"
+authors = [{name = "Daniel Hey", email = "danielhey@outlook.com"}]
+readme = "readme.md"
+license = {file = "LICENSE"}
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
+
+[project.urls]
+Home = "https://danhey.github.io"
+
+[project.scripts]
+atl="atl.cli:main"
+
+[tool.flit.module]
+name = "atl"
