@@ -7,15 +7,15 @@ import numpy as np
 def query_tic(target: list, ids=["Gaia", "TIC", "KIC"]) -> pd.DataFrame:
     if ids == "Gaia":
         res = Catalogs.query_criteria(catalog="Tic", GAIA=target).to_pandas()[
-            ["ID", "KIC", "GAIA", "Tmag", "ra", "dec"]
+            ["ID", "KIC", "GAIA", "Tmag", "ra", "dec", "Teff", "logg", "rad"]
         ]
     elif ids == "TIC":
         res = Catalogs.query_criteria(catalog="Tic", ID=target).to_pandas()[
-            ["ID", "KIC", "GAIA", "Tmag", "ra", "dec"]
+            ["ID", "KIC", "GAIA", "Tmag", "ra", "dec", "Teff", "logg", "rad"]
         ]
     elif ids == "KIC":
         res = Catalogs.query_criteria(catalog="Tic", KIC=target).to_pandas()[
-            ["ID", "KIC", "GAIA", "Tmag", "ra", "dec"]
+            ["ID", "KIC", "GAIA", "Tmag", "ra", "dec", "Teff", "logg", "rad"]
         ]
     else:
         raise ValueError("ids must be one of ..")

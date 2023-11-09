@@ -34,7 +34,7 @@ def main():
         "--cadence",
         type=int,
         required=False,
-        default=20,
+        default=120,
         help="The observational cadence, either 20 or 120. Default is 20.",
     )
 
@@ -63,9 +63,13 @@ def main():
     r = pd.merge(r, gaia, left_on="GAIA", right_on="dr2_source_id")
 
     # Setup values
-    r["dr3_teff"] = r["teff_gspspec"].combine_first(r["teff_gspphot"])
-    r["dr3_logg"] = r["logg_gspphot"].combine_first(r["logg_gspspec"])
-    r["dr3_radius"] = r["radius_gspphot"]
+    r["atl_teff"] = (
+        r["teff_gspphot"].combine_first(r["Teff"]).combine_first(r["teff_gspspec"])
+    )
+    r["atl_logg"] = (
+        r["logg_gspphot"].combine_first(r["logg"]).combine_first(r["teff_gspspec"])
+    )
+    r["atl_radius"] = r["radius_gspphot"].combine_first(r["radius"])
 
     # OK, now where do these stars lie in TESS?
     if args.sectors is None:
@@ -73,9 +77,12 @@ def main():
         sector_info = pd.DataFrame(get_sectors(vals).value_counts("ID")).reset_index()
         sector_info["ID"] = sector_info["ID"].astype(str)
         r = pd.merge(sector_info, r, on="ID")
-        r.rename(columns={0: "sectors"}, inplace=True)
+        r.rename(columns={"count": "sectors"}, inplace=True)
     else:
         r["sectors"] = args.sectors
+
+    # We need the position to calculate noise;
+    coord = pass
 
     # Now calculate the detection probability:
     row = r.iloc[0]
@@ -87,6 +94,8 @@ def main():
         row.dr3_logg,
         row.sectors,
         args.cadence,
+        row.lum_flame,
+        row.mass_flame,
         fap=args.fap,
     )
     print(

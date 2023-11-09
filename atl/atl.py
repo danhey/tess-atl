@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from scipy import stats
-import argparse
 
 from .constants import *
 from .tess_stars2px import tess_stars2px_function_entry
@@ -72,14 +71,22 @@ def subfreq(freq, fnyq=None):
 
 
 def calc_detection_probability(
-    magnitude, teff, radius, logg, sectors, cadence, vary_beta=True, fap=0.05
+    magnitude,
+    teff,
+    radius,
+    logg,
+    sectors,
+    cadence,
+    coordinate,
+    vary_beta=True,
+    fap=0.01,
 ):
-    CADENCE = cadence
-    VNYQ = (1.0 / (2.0 * CADENCE)) * 10**6  # in micro Hz
+    VNYQ = (1.0 / (2.0 * cadence)) * 10**6  # in micro Hz
 
     numax = get_numax(logg, teff)
-    lum = get_luminosity(radius, teff)
-    teffred = TEFFREF_SOLAR * (lum**-0.093)  # from (6) eqn 8. red-edge temp
+    if np.isnan(luminosity):
+        luminosity = get_luminosity(radius, teff)
+    teffred = TEFFREF_SOLAR * (luminosity**-0.093)  # from (6) eqn 8. red-edge temp
 
     if np.isnan(numax) | np.isnan(sectors):
         return np.nan, np.nan
@@ -92,36 +99,41 @@ def calc_detection_probability(
     )  # beta correction for hot solar-like stars from (6) eqn 9.
     if teff >= teffred:
         beta = 0.0
-
     # to remove the beta correction, set Beta=1
     if vary_beta == False:
         beta = 1.0
 
-    # modified from (6) eqn 11. Now consistent with dnu proportional to numax^0.77 in (14)
-    amp = 0.85 * 2.5 * beta * (radius**1.85) * ((teff / TEFF_SOLAR) ** 0.57)
+    mass = get_mass(logg, radius)
+    # Calculate amplitude
+    C_K = (teff / 5934) ** (0.8)
+    s = 0.838
+    r = 2
+    t = 1.32
+    amp = (
+        beta
+        * 0.85
+        * 2.5
+        * (luminosity**s)
+        / ((mass**t) * ((teff / TEFF_SOLAR) ** (r - 1)) * C_K)
+    )
 
     # From (5) table 2 values for delta nu_{env}. env_width is defined as +/- some value.
     env_width = 0.66 * numax**0.88
 
-    # noise = calc_noise(
-    #     imag,
-    #     teff=teff,
-    #     exptime=CADENCE,
-    #     e_lng=e_lng,
-    #     e_lat=e_lat,
-    #     g_lng=g_lng,
-    #     g_lat=g_lat,
-    #     npix_aper=npix_aper,
-    # )
-    # noise = noise * 10.0**6  # total noise in units of ppm
-    # noise = 10 ** (huber_noise(imag))
-
+    ecl = coordinate.geocentrictrueecliptic
+    gal = coordinate.galactic
+    noise = calc_noise(
+        magnitude,
+        teff=teff,
+        exptime=cadence,
+        e_lng=ecl.lon.value,
+        e_lat=ecl.lat.value,
+        g_lng=gal.l.value,
+        g_lat=gal.b.value,
+    )
+    noise = noise * 10.0**6  # total noise in units of ppm
     if cadence == 20:
-        noise = 10 ** (inter_20(magnitude))
-    elif cadence == 120:
-        noise = 10 ** (inter_120(magnitude))
-    else:
-        raise ValueError("Invalid cadence for calculating noise")
+        noise = noise * inter(magnitude)
 
     # call the function for the real and aliased components (above and below VNYQ) of the granulation
     # the order of the stars is different for the aliases so fun the function in a loop
@@ -138,7 +150,7 @@ def calc_detection_probability(
     ptot = (0.5 * 2.94 * amp**2.0 * ((2.0 * env_width) / dnu) * eta**2.0) / (
         DILUTION**2.0
     )
-    Binstr = 2.0 * (noise) ** 2.0 * CADENCE * 10**-6.0  # from (6) eqn 18
+    Binstr = 2.0 * (noise) ** 2.0 * cadence * 10**-6.0  # from (6) eqn 18
     bgtot = (Binstr + Pgrantotal) * 2.0 * env_width  # units are ppm**2
 
     snr = ptot / bgtot  # global signal to noise ratio from (11)
