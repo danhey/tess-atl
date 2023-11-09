@@ -117,6 +117,7 @@ def calc_detection_probability(
     )
 
     # From (5) table 2 values for delta nu_{env}. env_width is defined as +/- some value.
+
     env_width = 0.66 * numax**0.88
 
     ecl = coordinate.geocentrictrueecliptic

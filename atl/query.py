@@ -24,7 +24,7 @@ def query_tic(target: list, ids=["Gaia", "TIC", "KIC"]) -> pd.DataFrame:
 
 def query_gaia_multiple(dr2_ids):
     QUERY = f"""
-            SELECT xmatch.*, dr3.radius_gspphot, dr3.teff_gspspec, dr3.teff_gspphot, dr3.logg_gspphot, dr3.logg_gspspec
+            SELECT xmatch.*, dr3.radius_gspphot, dr3.teff_gspspec, dr3.teff_gspphot, dr3.logg_gspphot, dr3.logg_gspspec, dr3.radius_flame
             FROM gaiadr3.astrophysical_parameters as dr3
             JOIN (
                 SELECT dr2toedr3.*
@@ -39,7 +39,7 @@ def query_gaia_multiple(dr2_ids):
 
 def query_gaia(dr2_id):
     QUERY = f"""
-            SELECT xmatch.*, dr3.radius_gspphot, dr3.teff_gspspec, dr3.teff_gspphot, dr3.logg_gspphot, dr3.logg_gspspec
+            SELECT xmatch.*, dr3.radius_gspphot, dr3.teff_gspspec, dr3.teff_gspphot, dr3.logg_gspphot, dr3.logg_gspspec, dr3.radius_flame
             FROM gaiadr3.astrophysical_parameters as dr3
             JOIN (
                 SELECT dr2toedr3.*

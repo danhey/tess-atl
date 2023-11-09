@@ -69,7 +69,7 @@ def main():
         r["teff_gspphot"].combine_first(r["Teff"]).combine_first(r["teff_gspspec"])
     )
     r["atl_logg"] = (
-        r["logg_gspphot"].combine_first(r["logg"]).combine_first(r["teff_gspspec"])
+        r["logg_gspphot"].combine_first(r["logg"]).combine_first(r["logg_gspspec"])
     )
     r["atl_radius"] = r["radius_gspphot"].combine_first(r["rad"])
 
