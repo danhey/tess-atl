@@ -80,6 +80,7 @@ def main():
         sector_info["ID"] = sector_info["ID"].astype(str)
         r = pd.merge(sector_info, r, on="ID")
         r.rename(columns={0: "sectors"}, inplace=True)
+        r.rename(columns={"0": "sectors"}, inplace=True)
     else:
         r["sectors"] = args.sectors
 
