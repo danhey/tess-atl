@@ -79,7 +79,7 @@ def calc_detection_probability(
     cadence,
     coordinate,
     vary_beta=True,
-    fap=0.01,
+    fap=0.05,
 ):
     VNYQ = (1.0 / (2.0 * cadence)) * 10**6  # in micro Hz
 
