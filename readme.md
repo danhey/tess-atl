@@ -2,8 +2,18 @@
 
 Compute the asteroseismic detection probability for a given target.
 
+- [TESS-ATL](#tess-atl)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Command line](#command-line)
+    - [Python](#python)
+    - [Bulk queries](#bulk-queries)
+  - [Full catalog](#full-catalog)
+  - [Target lists](#target-lists)
+
 ### Installation
 
+From the terminal;
 ```bash
 pip install tess-atl
 ```
@@ -69,3 +79,48 @@ calc_detection_probability(
     cadence # The cadence of the observations (20, 120)
 )
 ```
+
+#### Bulk queries
+
+For users wishing to query more than a handful of stars and don't want to download the [full catalog](#full-catalog), you must use the appropriate Python functions. We have included functions for querying multiple Gaia IDs simultaneously (query.py). See the cli.py for additional details.
+
+### Full catalog
+
+The full catalog, calculated for every TESS star brighter than 12th magnitude is available in `catalog/`. Note that this catalog has the requirement that the predicted numax _must_ be greater than 240 microhertz. We leave in stars where the probability is NaN. In these scenarios, there is insufficient Gaia data to predict the probability.
+
+To read in the table, download each separate chunk of the ATL and run the following Python code;
+```python
+import pandas as pd
+atl = pd.concat([pd.read_csv(f'ATL_{i}' for i in range(0, 4))])
+```
+
+The table schema is as follows;
+| Column name   | Description                                                         |
+| ------------- | ------------------------------------------------------------------- |
+| ID            | TESS Input Catalog ID                                               |
+| ra            | Right ascension (J2000)                                             |
+| dec           | Declination (J2000)                                                 |
+| dr3_source_id | Gaia DR3 source ID                                                  |
+| Tmag          | TIC magnitude                                                       |
+| atl_radius    | Radius used for calculation (Rsun)                                  |
+| atl_teff      | Temperature used for calculation (K)                                |
+| atl_logg      | Surface gravity used for calculation (dex)                          |
+| numax         | Predicted numax (uHz)                                               |
+| p_120         | Probability in 2 minute cadence at available sectors                |
+| p_20          | Probability in 20 second cadence at available sectors               |
+| p_120_1s      | Probability in 2 minute cadence assuming single-sector observation  |
+| p_20_1s       | Probability in 20 second cadence assuming single-sector observation |
+| Sectors       | Number of sectors target has fallen on TESS detectors               |
+
+### Target lists
+
+For convenience, we additionally provide target lists for the 20s and 2min cadence data for stars which have been targeted for observation. These are merged versions of the tables available [here](https://tess.mit.edu/public/target_lists/target_lists.html). 
+
+These lists are available in the `catalog/` directory:
+
+1. targets_120s.csv: 2 minute targets complete up to sector 77
+2. targets_20s.csv: 20 second cadence targets complete up to sector 77. Note that these targets begin at Sector 27.
+3. targets_120s_count.csv: Count of number of sectors each 2min target has been observed in.
+4. targets_20s_count.csv: Count of number of sectors each 20s target has been observed in.
+
+The scripts for producing these target lists can be found in `scripts/make_target_list.py`.
