@@ -91,7 +91,7 @@ The full catalog, calculated for every TESS star brighter than 12th magnitude is
 To read in the table, download each separate chunk of the ATL and run the following Python code;
 ```python
 import pandas as pd
-atl = pd.concat([pd.read_csv(f'ATL_{i}' for i in range(0, 4))])
+atl = pd.concat([pd.read_csv(f'ATL_{i}.csv' for i in range(0, 4))])
 ```
 
 The table schema is as follows;
