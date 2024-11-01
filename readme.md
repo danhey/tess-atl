@@ -92,6 +92,7 @@ calc_detection_probability(
     logg, # in dex
     sectors, # The number of sectors the target is observed in
     cadence # The cadence of the observations (20, 120)
+    coordinate # optional, astropy skycoord for more precise noise calculation
 )
 ```
 

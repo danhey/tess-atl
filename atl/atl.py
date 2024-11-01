@@ -77,7 +77,7 @@ def calc_detection_probability(
     logg,
     sectors,
     cadence,
-    coordinate,
+    coordinate=None,
     vary_beta=True,
     fap=0.05,
 ):
@@ -120,17 +120,24 @@ def calc_detection_probability(
 
     env_width = 0.66 * numax**0.88
 
-    ecl = coordinate.geocentrictrueecliptic
-    gal = coordinate.galactic
-    noise = calc_noise(
-        magnitude,
-        teff=teff,
-        exptime=cadence,
-        e_lng=ecl.lon.value,
-        e_lat=ecl.lat.value,
-        g_lng=gal.l.value,
-        g_lat=gal.b.value,
-    )
+    if coordinate is None:
+        noise = calc_noise(
+            magnitude,
+            teff=teff,
+            exptime=cadence,
+        )
+    else:
+        ecl = coordinate.geocentrictrueecliptic
+        gal = coordinate.galactic
+        noise = calc_noise(
+            magnitude,
+            teff=teff,
+            exptime=cadence,
+            e_lng=ecl.lon.value,
+            e_lat=ecl.lat.value,
+            g_lng=gal.l.value,
+            g_lat=gal.b.value,
+        )
     noise = noise * 10.0**6  # total noise in units of ppm
     if cadence == 20:
         noise = noise * inter(magnitude)
